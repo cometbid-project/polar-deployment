@@ -1,0 +1,8 @@
+$ minikube start --cpus 2 --memory 4g --driver docker --profile polar
+$ kubectl get nodes
+$ kubectl config get-contexts
+$ kubectl config current-context
+$ kubectl config use-context polar
+$ kubectl get pod
+$ minikube stop --profile polar
+$ octant

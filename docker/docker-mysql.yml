@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: "polar-mysql"
+    command: 
+      - --default-authentication-plugin=caching_sha2_password
+      - --table_definition_cache=100
+      - --performance_schema=0
+      - --innodb_use_native_aio=0
+    restart: always
+    env_file: 
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql-db:/data/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql-db:
+    driver: local
