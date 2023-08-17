@@ -7,6 +7,7 @@ services:
       - polar-postgres
     image: "catalog-service:1.0.0"
     container_name: "catalog-service"
+    restart: unless-stopped
     ports:
       - 9001:9001
       - 8001:8001
@@ -25,6 +26,7 @@ services:
       - polar-postgres
     image: "order-service:1.0.0"
     container_name: "order-service"
+    restart: unless-stopped
     ports:
       - 9002:9002
       - 8002:8002
@@ -36,9 +38,26 @@ services:
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
       - SPRING_R2DBC_URL=r2dbc:postgresql://polar-postgres:5432/polardb_order
       - SPRING_FLYWAY_URL=jdbc:postgresql://polar-postgres:5432/polardb_order
+  
+  edge-service:
+    depends_on:
+      - polar-redis
+    image: "edge-service:1.0.0"
+    container_name: "edge-service"
+    ports:
+      - 9003:9003
+      - 8003:8003
+    environment:
+      # Buildpacks environment variable to enable debug through a socket on port 8000
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8000
+      - CATALOG_SERVICE_URL=http://catalog-service:9001
+      - ORDER_SERVICE_URL=http://order-service:9002
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+      - SPRING_REDIS_HOST=polar-redis
       
   config-service:
-    image: "config-service"
+    image: "config-service:1.0.0"
     container_name: "config-service"
     ports:
       - 8888:8888
@@ -54,6 +73,7 @@ services:
   polar-postgres:
     image: "postgres:15.2"
     container_name: "polar-postgres"
+    restart: unless-stopped
     ports:
       - 5432:5432
     environment:
@@ -61,3 +81,16 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  polar-redis:
+    image: "redis:7.0"
+    container_name: "polar-redis"
+    ports:
+      - 6379:6379
+
+  sonarqube:
+    image: sonarqube:lts
+    ports:
+      - 9000:9000
+    environment:
+      - SONAR_FORCEAUTHENTICATION=false
