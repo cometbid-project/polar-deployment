@@ -1,8 +1,9 @@
+docker-compose up -d
+docker-compose up -d catalog-service order-service
 docker-compose -f docker-postgresql.yml up -d
 docker-compose -f docker-mysql.yml up -d
-
+docker-compose down
 docker ps
-mysql -h 127.0.0.1 -P 3306 -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE
 
 For MySQL test
 -------------------------------
@@ -20,5 +21,26 @@ INSERT INTO users (first_name, last_name, email)
 VALUES ('Christian', 'Schou', 'chsc@christian-schou.dk');
 
 SELECT * FROM users;
+----------------------------------------------------------------------------------------------
+Gradle	                  	Maven
+./gradlew clean	  	 ./mvnw clean
+./gradlew build	 	  ./mvnw install
+./gradlew test	 	  ./mvnw test
+./gradlew bootJar	  	 ./mvnw spring-boot:repackage
+./gradlew bootRun	    	./mvnw spring-boot:run
+./gradlew bootBuildImage	./mvnw spring-boot:build-image
+			./mvnw test sonar:sonar
+			./mvnw sonar:sonar -Dsonar.login=admin -Dsonar.password=password
+			sonar:sonar -Dsonar.login=squ_7ad886d8cb7d8b21c5289491bdb5751d8f48152c
+
+./mvnw clean verify sonar:sonar -Dsonar.projectKey=order-service -Dsonar.projectName='order-service'  -Dsonar.host.url=http://localhost:9000/sonar -Dsonar.token=sqp_380f56570a4e13b689f17a51b9148ce75172dbfa
+
+Books to Buy
+-------------------------------------------------------------
+1. Learning Angular: A no-nonsense guide to building web applications with Angular15
+2. Reactive Patterns with RxJS for Angular
+3. Android Programming for Beginners
+4. Spring Boot 3 and Spring Framework 6
+
 
 
