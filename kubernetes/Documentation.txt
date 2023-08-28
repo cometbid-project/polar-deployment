@@ -6,3 +6,14 @@ $ kubectl config use-context polar
 $ kubectl get pod
 $ minikube stop --profile polar
 $ octant
+--------------------------Ingress NGINX -----------------------------
+$ minikube addons enable ingress --profile polar
+$ minikube tunnel --profile polar
+$ kubectl get all -n ingress-nginx
+
+OR 
+for Powershell make this: "C:\Program Files\Git\bin" an environment variable
+$ chmod +x create-cluster.sh
+$ chmod +x destroy-cluster.sh
+$ sh create-cluster.sh
+$ sh destroy-cluster.sh

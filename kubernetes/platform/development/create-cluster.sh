@@ -8,6 +8,8 @@ echo "\n🔌 Enabling NGINX Ingress Controller...\n"
 
 minikube addons enable ingress --profile polar
 
+kubectl get all -n ingress-nginx
+
 sleep 15
 
 echo "\n📦 Deploying platform services..."
@@ -41,5 +43,9 @@ kubectl wait \
   --for=condition=ready pod \
   --selector=db=polar-redis \
   --timeout=180s
+
+echo "\n⌛ Show currently deployed Services..."
+
+kubectl get deployment
 
 echo "\n⛵ Happy Sailing!\n"
